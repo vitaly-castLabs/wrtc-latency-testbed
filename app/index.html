@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../media/favicon.ico">
+    <title>castLabs WebRTC relay (TURN) test bed</title>
+    <style>
+        body {
+            background-color: #d2232a;
+            accent-color: black;
+            margin: 0;
+        }
+
+        body, input, option, select, button {
+            font-family: monospace;
+        }
+
+        video {
+            height: 49vh;
+            object-fit: contain;
+        }
+
+        #logo {
+            position: relative;
+            margin: 0 auto;
+            height: 10vh;
+        }
+
+        #video-container {
+            position: relative;
+            width: 100%;
+        }
+
+        #start-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3vh;
+            padding: 12px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script type="module" src="./js/main.js"></script>
+
+    <table style="width:100%;padding-right:1em">
+        <tr>
+            <td style="text-align:left"><img src="../media/castlabs-logo.svg" id="logo"></td>
+            <td style="text-align:right"><span id="curr-latency" style="display:none">Latency: 0ms</span></td>
+        </tr>
+    </table>
+
+    <button id="start-button" onclick="start()" disabled>Start</button>
+
+    <div id="video-container">
+        <table>
+            <tr>
+                <td id="local-label" style="display:none">Local:</td>
+            </tr>
+            <tr>
+                <td><video id="local-video" playsinline autoplay style="display:none"></video></td>
+            </tr>
+            <tr>
+                <td id="remote-label" style="display:none">Remote:</td>
+            </tr>
+            <tr>
+                <td><video id="remote-video" playsinline autoplay style="display:none"></video></td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
