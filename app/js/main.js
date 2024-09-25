@@ -14,6 +14,10 @@ let remotePc = null
 let relayCandidatesGathered = false
 let latencyPoller = null
 
+let captureHeight = 480
+let captureFrameRate = 60
+let videoBitRate = 1_000_000
+
 class IceServer {
     constructor(url, username = '', password = '') {
         this.urls = [url]
@@ -52,6 +56,16 @@ window.onload = () => {
         iceServers.push(stun)
 
     iceServers.push(extractIceServerParams(params, 'turn'))
+
+    if (params.has('height'))
+        captureHeight = params.get('height') | 0
+    if (params.has('fps'))
+        captureFrameRate = params.get('fps') | 0
+    if (params.has('bitrate'))
+        videoBitRate = params.get('bitrate') | 0
+
+    console.log(`getDisplayMedia-requested height: ${captureHeight} pix, fps: ${captureFrameRate}, WebRTC video bit rate: ${videoBitRate / 1000} kbps`)
+    console.log('Sample URL params for resolution, frame rate and bit rate: height=720&fps=10&bitrate=300000')
 
     startBtn.disabled = false
 }
@@ -96,8 +110,8 @@ async function start() {
 
     try {
         const stream = await navigator.mediaDevices.getDisplayMedia({video: {
-            height: {ideal: 480},
-            frameRate: {ideal: 60}
+            height: {ideal: captureHeight},
+            frameRate: {ideal: captureFrameRate}
         }})
         localVid.srcObject = stream
 
@@ -124,8 +138,8 @@ async function start() {
                 if (!params.encodings)
                     params.encodings = [{}]
 
-                params.encodings[0].maxBitrate = 1_000_000
-                params.encodings[0].minBitrate = 300_000
+                params.encodings[0].maxBitrate = videoBitRate
+                params.encodings[0].minBitrate = videoBitRate >> 2
 
                 await tr.sender.setParameters(params)
             }
